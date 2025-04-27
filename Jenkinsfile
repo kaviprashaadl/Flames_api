@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout code from GitHub
-                git https://github.com/kaviprashaadl/Flames_api.git
+                git url: 'https://github.com/kaviprashaadl/Flames_api.git'
             }
         }
         
@@ -35,9 +35,8 @@ pipeline {
                 }
             }
         }
-        }
+    }
     
-
     post {
         always {
             cleanWs() // Clean up the workspace after the build
