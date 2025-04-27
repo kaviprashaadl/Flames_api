@@ -1,21 +1,36 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE_NAME = "flames-api" // Change to your image name
+        DOCKER_IMAGE_NAME = "flames-api" 
         DOCKER_IMAGE_TAG = "latest"
     }
     stages {
         stage('Checkout') {
             steps {
-                // Checkout code from GitHub
                 git url: 'https://github.com/kaviprashaadl/Flames_api.git', branch: 'main'
+            }
+        }
+        
+        stage('Build Java Application') {
+            steps {
+                script {
+                    // Check if it's a Maven project
+                    if (fileExists('pom.xml')) {
+                        bat 'mvn clean package'
+                    } 
+                    // Check if it's a Gradle project
+                    else if (fileExists('build.gradle')) {
+                        bat './gradlew build'
+                    } else {
+                        error 'Could not detect Maven or Gradle project'
+                    }
+                }
             }
         }
         
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build Docker image
                     bat '''
                         docker build -t %DOCKER_IMAGE_NAME%:%DOCKER_IMAGE_TAG% .
                     '''
@@ -23,12 +38,14 @@ pipeline {
             }
         }
         
-        stage('Push Docker Image') {
+        stage('Run Docker Container') {
             steps {
                 script {
-                    // Run the Docker image locally on the machine
+                    // Stop any existing container with the same name to avoid conflicts
                     bat '''
-                        docker run -d -p 8080:80 %DOCKER_IMAGE_NAME%:%DOCKER_IMAGE_TAG%
+                        docker stop %DOCKER_IMAGE_NAME% 2>nul || echo Container not running
+                        docker rm %DOCKER_IMAGE_NAME% 2>nul || echo No container to remove
+                        docker run -d -p 8080:80 --name %DOCKER_IMAGE_NAME% %DOCKER_IMAGE_NAME%:%DOCKER_IMAGE_TAG%
                     '''
                 }
             }
@@ -37,7 +54,7 @@ pipeline {
     
     post {
         always {
-            cleanWs() // Clean up the workspace after the build
+            cleanWs()
         }
     }
 }
