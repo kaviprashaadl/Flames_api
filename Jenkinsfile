@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     // Build Docker image
-                    sh '''
+                    bat '''
                         docker build -t $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .
                     '''
                 }
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     // Run the Docker image locally on the machine
-                    sh '''
+                    bat '''
                         docker run -d -p 8080:80 $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
                     '''
                 }
