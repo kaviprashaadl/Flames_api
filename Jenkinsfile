@@ -1,11 +1,9 @@
 pipeline {
     agent any
-
     environment {
         DOCKER_IMAGE_NAME = "flames-api" // Change to your image name
         DOCKER_IMAGE_TAG = "latest"
     }
-
     stages {
         stage('Checkout') {
             steps {
@@ -19,7 +17,7 @@ pipeline {
                 script {
                     // Build Docker image
                     bat '''
-                        docker build -t $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .
+                        docker build -t %DOCKER_IMAGE_NAME%:%DOCKER_IMAGE_TAG% .
                     '''
                 }
             }
@@ -30,7 +28,7 @@ pipeline {
                 script {
                     // Run the Docker image locally on the machine
                     bat '''
-                        docker run -d -p 8080:80 $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+                        docker run -d -p 8080:80 %DOCKER_IMAGE_NAME%:%DOCKER_IMAGE_TAG%
                     '''
                 }
             }
