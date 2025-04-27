@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout code from GitHub
-                git url: 'https://github.com/kaviprashaadl/Flames_api.git'
+                git url: 'https://github.com/kaviprashaadl/Flames_api.git', branch: 'main'
             }
         }
         
