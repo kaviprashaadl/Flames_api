@@ -45,7 +45,7 @@ pipeline {
                     bat '''
                         docker stop %DOCKER_IMAGE_NAME% 2>nul || echo Container not running
                         docker rm %DOCKER_IMAGE_NAME% 2>nul || echo No container to remove
-                        docker run -d -p 8080:80 --name %DOCKER_IMAGE_NAME% %DOCKER_IMAGE_NAME%:%DOCKER_IMAGE_TAG%
+                        docker run -d -p 8080:8080 --name %DOCKER_IMAGE_NAME% %DOCKER_IMAGE_NAME%:%DOCKER_IMAGE_TAG%
                     '''
                 }
             }
